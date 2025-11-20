@@ -64,11 +64,12 @@ used for regression tasks, binary classification and multi-category classificati
 # ridge_poly_regression(X, Y, LAMBDA=1, order=2, form='auto', X_test=X_test)
 
 
-
-
-
-
-
-# pearson_correlation(X,Y)
+'''
+used for feature selection, to see which X features have high correlation with Y, to reduce dimension of X
+    option 1: pick k features with highest pearson correlation values
+    option 2: pick features with pearson correlation values above a threshold c
+    k and c are magic numbers decided outside of this function
+'''
+pearson_correlation(X,Y)
 
 # print("did you add offset for X if you are using linear regression? and DON'T use offset for polynomial Regression!" )
