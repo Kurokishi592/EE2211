@@ -1,8 +1,6 @@
-from numpy.ma.core import identity
-
-
 def ridge_regression(X, y, LAMBDA, X_test, form="auto"):
     import numpy as np
+    np.set_printoptions(precision=4, suppress=True)
     if form=="auto":
         if X.shape[1] < X.shape[0]:
             system = "overdetermined"
@@ -32,12 +30,14 @@ def ridge_regression(X, y, LAMBDA, X_test, form="auto"):
     else:
         w = np.linalg.inv(X) @ y
 
-    print("w is: ")
+    print("w (first row is for bias): ")
     print(w)
     print("")
 
     y_calculated=X@w
-    print("y calculated is: \n", y_calculated, "\n")
+    print("y_train_predicted is: \n", np.round(y_calculated, 4), "\n")
+    print("if one hot encoding multi-class classification, y_train_classes are (transpose urself for argmax of each row): \n", np.argmax(y_calculated, axis=1), "\n")
+    print("if binary classification, y_train_predicted_classified is\n" , np.sign(y_calculated), "\n")
     y_difference_square=np.square(y_calculated-y)
     sum_of_square=sum(y_difference_square)
     mean_squared_error=sum_of_square/y.shape[0]
@@ -45,4 +45,6 @@ def ridge_regression(X, y, LAMBDA, X_test, form="auto"):
     print("MEAN square error is", mean_squared_error, "\n")
 
     y_predicted=X_test@w
-    print("y_predicted is\n", y_predicted, "\n")
+    print("y_test_predicted is\n", np.round(y_predicted, 4), "\n")
+    print("if one hot encoding multi-class classification, y_test_classes are (transpose urself for argmax of each row): \n", np.argmax(y_predicted, axis=1), "\n")
+    print("if binary classification, y_test_predicted_classified is\n", np.sign(y_predicted), "\n")

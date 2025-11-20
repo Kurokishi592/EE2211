@@ -1,8 +1,9 @@
 def polynomial_regression(X,y,order,X_test):
     import numpy as np
     from sklearn.preprocessing import PolynomialFeatures
+    np.set_printoptions(precision=4, suppress=True)
     poly = PolynomialFeatures(order)
-    P = poly.fit_transform(X)
+    P = poly.fit_transform(X) # auto includes bias term
     print("the number of parameters: ", P.shape[1])
     print("the number of samples: ", P.shape[0])
     if P.shape[1] < P.shape[0]:
@@ -28,8 +29,10 @@ def polynomial_regression(X,y,order,X_test):
     print("")
 
     P_train_predicted=P@w
-    print("y_train_predicted is: ", P_train_predicted)
-    print("y_train_classified is: ", np.sign(P_train_predicted))
+    print("y_train_predicted is:\n ", np.round(P_train_predicted, 4))
+    print("")
+    print("if one hot encoding multi-class classification, y_train_classes are (transpose urself for argmax of each row): \n", np.argmax(P_train_predicted, axis=1), "\n")
+    print("if binary classification, y_train_predicted_classified is:\n ", np.sign(P_train_predicted), "\n")
     y_difference_square=np.square(P_train_predicted-y)
     sum_of_square=sum(y_difference_square)
     mean_squared_error=sum_of_square/y.shape[0]
@@ -41,8 +44,11 @@ def polynomial_regression(X,y,order,X_test):
     print(P_test)
     print("")
     y_predicted = P_test @ w
-    print("y_predicted is")
-    print(y_predicted)
+    print("y_test_predicted is")
+    print(np.round(y_predicted, 4))
+    print("")
+    print("if one hot encoding multi-class classification, y_test_classes are (transpose urself for argmax of each row): \n", np.argmax(y_predicted, axis=1), "\n")
+    print("if binary classification, y_test_predicted_classified is:\n ", np.sign(y_predicted))
 
 
     # if single class classification
