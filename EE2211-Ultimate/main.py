@@ -135,22 +135,23 @@ num_iters = 5
 
 '''
 perform kmeans clustering
-returns converged centers and cluster labels
+returns converged centers and cluster labels. Auto stop iterations upon convergence.
+for fuzzy means, run fuzzy_cmeans.py directly instead
 '''
-x1 = np.array([0, 0])
-x2 = np.array([0, 1])
-x3 = np.array([1, 1])
-x4 = np.array([1, 0])
-x5 = np.array([3, 0])
-x6 = np.array([3, 1])
-x7 = np.array([4, 0])
-x8 = np.array([4, 1])
-data_points = np.array([x1, x2, x3, x4, x5, x6, x7, x8])
-# c1_init = x1.copy()
-# c2_init = x2.copy()\
-c1_init = np.array([1, 2])
-c2_init = np.array([1, 2])
-centers_init = np.array([c1_init, c2_init])
+x1 = np.array([10])
+x2 = np.array([11])
+x3 = np.array([12])
+x4 = np.array([15])
+x5 = np.array([16])
+x6 = np.array([17])
+x7 = np.array([20])
+x8 = np.array([21])
+x9 = np.array([22])
+data_points = np.array([x1, x2, x3, x4, x5, x6, x7, x8, x9])
+c1_init = x1.copy()
+c2_init = x4.copy()
+c3_init = x7.copy()
+centers_init = np.array([c1_init, c2_init, c3_init])
 
-custom_kmeans(data_points, centers_init, n_clusters=2, max_iterations=100)
+custom_kmeans(data_points, centers_init, n_clusters=3, max_iterations=100)
 # kmeans_sklearn(data_points, centers_init, num_clusters=2) # dont use
