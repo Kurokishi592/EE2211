@@ -17,9 +17,9 @@ def TreeRegressor(X_train, X_test, y_train, y_test, criterion, max_depth):
     X_train = X_train[sort_index]
     y_train = y_train[sort_index]
     
-    sort_index = X_test.argsort()
-    X_test = X_test[sort_index]
-    y_test = y_test[sort_index]
+    # sort_index = X_test.argsort()
+    # X_test = X_test[sort_index]
+    # y_test = y_test[sort_index]
 
     # scikit decision tree regressor
     scikit_tree = tree.DecisionTreeRegressor(criterion=criterion, max_depth=max_depth)
@@ -27,18 +27,18 @@ def TreeRegressor(X_train, X_test, y_train, y_test, criterion, max_depth):
     
     # predict
     y_trainpred = scikit_tree.predict(X_train.reshape(-1,1))
-    y_testpred = scikit_tree.predict(X_test.reshape(-1,1))
+    # y_testpred = scikit_tree.predict(X_test.reshape(-1,1))
     
     # print accuracies
     print("[treeRegressor] Training MSE: ", mean_squared_error(y_train, y_trainpred))
-    print("[treeRegressor] Test MSE: ", mean_squared_error(y_test, y_testpred))
+    # print("[treeRegressor] Test MSE: ", mean_squared_error(y_test, y_testpred))
     
     # Plot
-    plt.figure(0, figsize=[9,4.5])
-    plt.rcParams.update({'font.size': 16})
-    plt.scatter(X_train, y_train, c='steelblue', s=30)
-    plt.plot(X_train, y_trainpred, color='red', lw=2, label='scikit-learn')
-    plt.xlabel('X train')
-    plt.ylabel('Y train and predict')
-    plt.legend(loc='upper right',ncol=3, fontsize=10)
-    plt.show()
+    # plt.figure(0, figsize=[9,4.5])
+    # plt.rcParams.update({'font.size': 16})
+    # plt.scatter(X_train, y_train, c='steelblue', s=30)
+    # plt.plot(X_train, y_trainpred, color='red', lw=2, label='scikit-learn')
+    # plt.xlabel('X train')
+    # plt.ylabel('Y train and predict')
+    # plt.legend(loc='upper right',ncol=3, fontsize=10)
+    # plt.show()

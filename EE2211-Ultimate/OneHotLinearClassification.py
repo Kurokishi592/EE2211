@@ -34,6 +34,7 @@ def onehot_linearclassification(X, y, X_test):
     y_true_cls = np.argmax(y_onehot, axis=1)
     print("[onehot_linearclassification] Train multiclass metrics:")
     print_multiclass_metrics(compute_multiclass_metrics(y_true_cls, y_train_pred))
+    print("")
     # y_difference_square=np.square(y_calculated-y)
     # sum_of_square=sum(y_difference_square)
     # mean_squared_error=sum_of_square/y.shape[0]

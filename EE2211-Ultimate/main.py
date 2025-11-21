@@ -8,6 +8,10 @@ from GradientDescent import GradientDescent
 from regression_tree_house import regression_tree_house
 from TreeRegressor import TreeRegressor
 from TreeClassifier import TreeClassifier
+from ManualTreeRegressor import manual_tree_regressor
+from AutoTreeRegressor import auto_tree_regressor
+from ManualTreeClassifier import manual_tree_classifier
+from AutoTreeClassifier import auto_tree_classifier
 from k_means_cluster import custom_kmeans
 from k_means_cluster_lib import kmeans_sklearn
 import numpy as np
@@ -20,12 +24,11 @@ no need to add column of 1s to X for regression. X_fitted does it already. First
 for correlation, row is sample, column is feature. Comparing each feature column to one target Y
 '''
 X=np.array(
-    [[-0.709, 2.8719, -1.8349, 2.6354],
-     [1.7255 , 1.5014, 0.4055, 2.7448],
-     [0.9539, 1.8365, 1.0118, 1.4616],
-     [-0.7581, -0.5467, 0.5171, 0.7258],
-     [-1.035, 1.8274, 0.7279, -1.6893],
-     [-1.049, 0.3501, 1.2654, -1.7512]
+    [[3.3459, 2.7435, -1.7253],
+     [1.0893,2.9113,-0.7804],
+     [3.2103,1.4706,-0.9944],
+     [1.744,1.2895,0.5307],
+     [1.6762,2.1366,-1.0502]
    ]
 );
 
@@ -37,21 +40,17 @@ for binary, all functions are the same, key in -1 or 1 will do.
 for correlation, row is samples. should be comparing to one target only so only 1 column
 '''
 Y=np.array(
-    [[0.8206], 
-      [1.0639], 
-      [0.6895], 
-      [-0.0252], 
-      [0.995], 
-      [0.6608]
+    [[2.9972], 
+     [1.1399], 
+     [2.228], 
+     [0.3387], 
+     [2.5042]
     ]
 );
 
 ''' same dont add one column of 1s to X_test for regression'''
 X_test=np.array(
-    [[0.1, 0.1],
-     [0.9, 0.9],
-     [0.1,0.9],
-     [0.9,0.1]
+    [[6]
     ]
 )
 
@@ -74,7 +73,7 @@ used for regression tasks, binary classification and multi-category classificati
     so read qn carefuly may need to reorder rows of w if they ask for it (and watch P's columns) accordingly
 '''
 # ridge_regression(X_fitted,Y,LAMBDA=0.1, X_test=X_test_fitted, form='auto') #linear model
-# polynomial_regression(X, Y, order=2, X_test=X_test)
+# polynomial_regression(X, Y, order=4, X_test=X_test)
 # ridge_poly_regression(X, Y, LAMBDA=1, order=2, form='auto', X_test=X_test)
 
 '''
@@ -92,20 +91,31 @@ classification task and regression task (1D to 1D regression only) using decisio
 regression_tree_house is just an example code, with custom tree regressor
     X_train and y_train to train sklearn decision tree 
     X_test and y_test to evaluate the trained decision tree
-    criterion for regressor: 'squared_error' (default), 'friedman_mse', 'absolute_error', 'poisson'
-    criterion for classifier: 'gini' or 'entropy'
+    criterion for regressor: 'squared_error' (default)
+    criterion for classifier: 'gini' or 'entropy' or 'misclassification'
     max_depth to prune tree (reduce complexity and overfitting)
 both function returns nothing, just print out the training and test accuracies/MSEs
 '''
-# regression_tree_house()
-X_train = np.array([0.5, 0.6, 1.0, 2.0, 3.0, 3.2, 3.8])
-X_test = np.array([0.1, 0.9, 1.5, 2.5, 3.5])
-y_train = np.array([0.4, 0.5, 0.7, 1.0, 1.5, 1.7, 2.0])
-y_test = np.array([0.2, 0.6, 1.0, 1.3, 1.8])
+
+# Example classification data (1D) for manual/auto classifiers
+X_train = np.array([0.2, 0.7, 1.8, 2.2, 3.7, 4.1, 4.5, 5.1, 6.3, 7.4])
+y_train = np.array([2.1, 1.5, 5.8, 6.1, 9.1, 9.5, 9.8, 12.7, 13.8, 15.9])
+X_test = np.array([1.0, 3.0, 6.0]) # if need rmb uncomment in both py
+y_test = np.array([0, 1, 2]) # if need rmb uncomment in both py
+max_depth = 20
+impurity = 'gini'  # options: 'gini', 'entropy', 'misclassification'
+# Nested per-node thresholds: [root, [depth1_left, depth1_right], [depth2_n0, depth2_n1, depth2_n2, depth2_n3], ...]
+# Provide enough thresholds to drive splits; missing entries stop growth for that node.
+decision_threshold = [3.0, [1.0, 4.8], [0.5, 1.5, 4.0, 5.4]]
+
+manual_tree_regressor(X_train, y_train, max_depth=max_depth, decision_threshold=decision_threshold, X_test=X_test)
+# auto_tree_regressor(X_train, y_train, max_depth=max_depth, X_test=X_test)
+# manual_tree_classifier(X_train, y_train, max_depth=max_depth, decision_threshold=decision_threshold, X_test=X_test, criterion=impurity)
+# auto_tree_classifier(X_train, y_train, max_depth=max_depth, X_test=X_test, criterion=impurity)
 
 # TreeClassifier(X_train, X_test, y_train, y_test, criterion='gini', max_depth=3)
 # TreeRegressor(X_train, X_test, y_train, y_test, criterion='squared_error', max_depth=3)
-
+# regression_tree_house()
 
 '''
 perform gradient descent (for multivariable functions)
@@ -116,8 +126,8 @@ GradientDescent(f, f_prime, initial, learning_rate, num_iters)
     [1]: function values at each iteration
     [2]: gradient vectors at each iteration
 '''
-learning_rate = 0.03
-num_iters = 5
+learning_rate = 0.2
+num_iters = 3
 
 # print("Values of parameters at each step (first row is initial values): \n")
 # print(GradientDescent(lambda xyz:xyz[1]*xyz[0]**2 + xyz[1]**3 + xyz[0]*xyz[1]*xyz[2], lambda xyz:(2*xyz[0]*xyz[1] + xyz[1]*xyz[2], xyz[0]**2 + 3*xyz[1]**2 + xyz[0]*xyz[2], xyz[0]*xyz[1]), (2, 6, -3), learning_rate, num_iters)[0], "\n")
@@ -127,9 +137,18 @@ num_iters = 5
 # print(GradientDescent(lambda xyz:xyz[1]*xyz[0]**2 + xyz[1]**3 + xyz[0]*xyz[1]*xyz[2], lambda xyz:(2*xyz[0]*xyz[1] + xyz[1]*xyz[2], xyz[0]**2 + 3*xyz[1]**2 + xyz[0]*xyz[2], xyz[0]*xyz[1]), (2, 6, -3), learning_rate, num_iters)[2], "\n")
 
 # print("Values of parameters at each step (first row is initial values): \n")
-# print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 0.6, learning_rate, num_iters)[0], "\n")
+# print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 3, learning_rate, num_iters)[0], "\n")
 # print("Function values at each step: \n")
-# print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 0.6, learning_rate, num_iters)[1], "\n")
+# print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 3, learning_rate, num_iters)[1], "\n")
+# print("Gradient vectors (partial derivatives) at each step: \n")
+# print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 3, learning_rate, num_iters)[2], "\n")
+
+# print("Values of parameters at each step (first row is initial values): \n")
+# print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:xy[0]**2 + xy[0]*xy[1]**2, (3,2) , learning_rate, num_iters)[0], "\n")
+# print("Function values at each step: \n")
+# print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:xy[0]**2 + xy[0]*xy[1]**2, (3,2), learning_rate, num_iters)[1], "\n")
+# print("Gradient vectors (partial derivatives) at each step: \n")
+# print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:xy[0]**2 + xy[0]*xy[1]**2, (3,2), learning_rate, num_iters)[2], "\n")
 
 
 '''
@@ -152,5 +171,5 @@ c2_init = x4.copy()
 c3_init = x7.copy()
 centers_init = np.array([c1_init, c2_init, c3_init])
 
-custom_kmeans(data_points, centers_init, n_clusters=3, max_iterations=100)
+# custom_kmeans(data_points, centers_init, n_clusters=3, max_iterations=100)
 # kmeans_sklearn(data_points, centers_init, num_clusters=2) # dont use
