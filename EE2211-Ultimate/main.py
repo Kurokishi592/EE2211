@@ -18,7 +18,6 @@ import numpy as np
 from sklearn.metrics import mean_squared_error
 from EnterMetrics import EnterMetrics
 
-
 ''' 
 no need to add column of 1s to X for regression. X_fitted does it already. First row of w is w0.
 for correlation, row is sample, column is feature. Comparing each feature column to one target Y
@@ -92,23 +91,21 @@ regression_tree_house is just an example code, with custom tree regressor
     X_train and y_train to train sklearn decision tree 
     X_test and y_test to evaluate the trained decision tree
     criterion for regressor: 'squared_error' (default)
-    criterion for classifier: 'gini' or 'entropy' or 'misclassification'
+    criterion for classifier by impurity: 'gini' or 'entropy' or 'misclassification'
     max_depth to prune tree (reduce complexity and overfitting)
+    Nested per-node thresholds: [root, [depth1_left, depth1_right], [depth2_n0, depth2_n1, depth2_n2, depth2_n3], ...]
+    Provide enough thresholds to drive splits; missing entries stop growth for that node.
 both function returns nothing, just print out the training and test accuracies/MSEs
 '''
-
-# Example classification data (1D) for manual/auto classifiers
 X_train = np.array([0.2, 0.7, 1.8, 2.2, 3.7, 4.1, 4.5, 5.1, 6.3, 7.4])
 y_train = np.array([2.1, 1.5, 5.8, 6.1, 9.1, 9.5, 9.8, 12.7, 13.8, 15.9])
-X_test = np.array([1.0, 3.0, 6.0]) # if need rmb uncomment in both py
-y_test = np.array([0, 1, 2]) # if need rmb uncomment in both py
+X_test = np.array([1.0, 3.0, 6.0]) # leave untouched if not used
+y_test = np.array([0, 1, 2]) # leave untouched if not used
 max_depth = 20
-impurity = 'gini'  # options: 'gini', 'entropy', 'misclassification'
-# Nested per-node thresholds: [root, [depth1_left, depth1_right], [depth2_n0, depth2_n1, depth2_n2, depth2_n3], ...]
-# Provide enough thresholds to drive splits; missing entries stop growth for that node.
+impurity = 'gini' 
 decision_threshold = [3.0, [1.0, 4.8], [0.5, 1.5, 4.0, 5.4]]
 
-manual_tree_regressor(X_train, y_train, max_depth=max_depth, decision_threshold=decision_threshold, X_test=X_test)
+# manual_tree_regressor(X_train, y_train, max_depth=max_depth, decision_threshold=decision_threshold, X_test=X_test)
 # auto_tree_regressor(X_train, y_train, max_depth=max_depth, X_test=X_test)
 # manual_tree_classifier(X_train, y_train, max_depth=max_depth, decision_threshold=decision_threshold, X_test=X_test, criterion=impurity)
 # auto_tree_classifier(X_train, y_train, max_depth=max_depth, X_test=X_test, criterion=impurity)
@@ -125,16 +122,18 @@ GradientDescent(f, f_prime, initial, learning_rate, num_iters)
     [0]: steps at each iteration
     [1]: function values at each iteration
     [2]: gradient vectors at each iteration
+if multiple variables, put PARTIAL derivative of each variable in f_prime return tuple
+(x,y,z) => (df/dx, df/dy, df/dz)
 '''
 learning_rate = 0.2
 num_iters = 3
 
-# print("Values of parameters at each step (first row is initial values): \n")
-# print(GradientDescent(lambda xyz:xyz[1]*xyz[0]**2 + xyz[1]**3 + xyz[0]*xyz[1]*xyz[2], lambda xyz:(2*xyz[0]*xyz[1] + xyz[1]*xyz[2], xyz[0]**2 + 3*xyz[1]**2 + xyz[0]*xyz[2], xyz[0]*xyz[1]), (2, 6, -3), learning_rate, num_iters)[0], "\n")
-# print("Function values at each step: \n")
-# print(GradientDescent(lambda xyz:xyz[1]*xyz[0]**2 + xyz[1]**3 + xyz[0]*xyz[1]*xyz[2], lambda xyz:(2*xyz[0]*xyz[1] + xyz[1]*xyz[2], xyz[0]**2 + 3*xyz[1]**2 + xyz[0]*xyz[2], xyz[0]*xyz[1]), (2, 6, -3), learning_rate, num_iters)[1], "\n")
-# print("Gradient vectors (partial derivatives) at each step: \n")
-# print(GradientDescent(lambda xyz:xyz[1]*xyz[0]**2 + xyz[1]**3 + xyz[0]*xyz[1]*xyz[2], lambda xyz:(2*xyz[0]*xyz[1] + xyz[1]*xyz[2], xyz[0]**2 + 3*xyz[1]**2 + xyz[0]*xyz[2], xyz[0]*xyz[1]), (2, 6, -3), learning_rate, num_iters)[2], "\n")
+print("Values of parameters at each step (first row is initial values): \n")
+print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:(2*xy[0] + xy[1]**2, 2*xy[0]*xy[1]), (3,2) , learning_rate, num_iters)[0], "\n")
+print("Function values at each step: \n")
+print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:(2*xy[0] + xy[1]**2, 2*xy[0]*xy[1]), (3,2), learning_rate, num_iters)[1], "\n")
+print("Gradient vectors (partial derivatives) at each step: \n")
+print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:(2*xy[0] + xy[1]**2, 2*xy[0]*xy[1]), (3,2), learning_rate, num_iters)[2], "\n")
 
 # print("Values of parameters at each step (first row is initial values): \n")
 # print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 3, learning_rate, num_iters)[0], "\n")
@@ -143,33 +142,26 @@ num_iters = 3
 # print("Gradient vectors (partial derivatives) at each step: \n")
 # print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 3, learning_rate, num_iters)[2], "\n")
 
-# print("Values of parameters at each step (first row is initial values): \n")
-# print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:xy[0]**2 + xy[0]*xy[1]**2, (3,2) , learning_rate, num_iters)[0], "\n")
-# print("Function values at each step: \n")
-# print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:xy[0]**2 + xy[0]*xy[1]**2, (3,2), learning_rate, num_iters)[1], "\n")
-# print("Gradient vectors (partial derivatives) at each step: \n")
-# print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:xy[0]**2 + xy[0]*xy[1]**2, (3,2), learning_rate, num_iters)[2], "\n")
-
 
 '''
 perform kmeans clustering
 returns converged centers and cluster labels. Auto stop iterations upon convergence.
 for fuzzy means, run fuzzy_cmeans.py directly instead
 '''
-x1 = np.array([10])
-x2 = np.array([11])
-x3 = np.array([12])
-x4 = np.array([15])
-x5 = np.array([16])
-x6 = np.array([17])
-x7 = np.array([20])
-x8 = np.array([21])
-x9 = np.array([22])
-data_points = np.array([x1, x2, x3, x4, x5, x6, x7, x8, x9])
-c1_init = x1.copy()
-c2_init = x4.copy()
-c3_init = x7.copy()
-centers_init = np.array([c1_init, c2_init, c3_init])
+x1 = np.array([50])
+x2 = np.array([60])
+x3 = np.array([66])
+x4 = np.array([68])
+x5 = np.array([71])
+x6 = np.array([72])
+x7 = np.array([75])
+x8 = np.array([82])
+x9 = np.array([90])
+x10 = np.array([99])
+data_points = np.array([x1, x2, x3, x4, x5, x6, x7, x8, x9, x10])
+c1_init = x3.copy()
+c2_init = x7.copy()
+# c3_init = x7.copy()
+centers_init = np.array([c1_init, c2_init])
 
-# custom_kmeans(data_points, centers_init, n_clusters=3, max_iterations=100)
-# kmeans_sklearn(data_points, centers_init, num_clusters=2) # dont use
+# custom_kmeans(data_points, centers_init, n_clusters=2, max_iterations=100)
