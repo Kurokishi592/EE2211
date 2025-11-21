@@ -7,6 +7,10 @@ from OneHotLinearClassification import onehot_linearclassification
 from pearson_correlation import pearson_correlation
 from GradientDescent import GradientDescent
 from regression_tree_house import regression_tree_house
+from TreeRegressor import TreeRegressor
+from TreeClassifier import TreeClassifier
+from k_means_cluster import custom_kmeans
+from k_means_cluster_lib import kmeans_sklearn
 import numpy as np
 from sklearn.metrics import mean_squared_error
 from EnterMetrics import EnterMetrics
@@ -56,14 +60,11 @@ X_test=np.array(
 X_fitted=np.hstack((np.ones((len(X),1)),X))
 X_test_fitted=np.hstack((np.ones((len(X_test),1)),X_test))
 
-
 ''' used for regression task, or binary classification task '''
 # linear_regression(X_fitted,Y, X_test_fitted) 
 
-
 ''' used for multi-category classification task (auto one hot, key in 0, 1, 2 ... for y) '''
 # onehot_linearclassification(X_fitted,Y,X_test_fitted) 
-
 
 '''
 used for regression tasks, binary classification and multi-category classification tasks (manually one hot encode y for multi-category)
@@ -77,18 +78,34 @@ used for regression tasks, binary classification and multi-category classificati
 # polynomial_regression(X, Y, order=2, X_test=X_test)
 # ridge_poly_regression(X, Y, LAMBDA=1, order=2, form='auto', X_test=X_test)
 
-
 '''
 used for feature selection, to see which X features have high correlation with Y, to reduce dimension of X
     option 1: pick k features with highest pearson correlation values
     option 2: pick features with pearson correlation values above a threshold c
     k and c are magic numbers decided outside of this function
 '''
-pearson_correlation(X,Y)
+# pearson_correlation(X,Y)
 
+''' ----------------------------------------------------------------------------------------------------------------------------------'''
 
-''' classification task and regression task using decision trees '''
+''' 
+classification task and regression task (1D to 1D regression only) using decision trees 
+regression_tree_house is just an example code, with custom tree regressor
+    X_train and y_train to train sklearn decision tree 
+    X_test and y_test to evaluate the trained decision tree
+    criterion for regressor: 'squared_error' (default), 'friedman_mse', 'absolute_error', 'poisson'
+    criterion for classifier: 'gini' or 'entropy'
+    max_depth to prune tree (reduce complexity and overfitting)
+both function returns nothing, just print out the training and test accuracies/MSEs
+'''
 # regression_tree_house()
+X_train = np.array([0.5, 0.6, 1.0, 2.0, 3.0, 3.2, 3.8])
+X_test = np.array([0.1, 0.9, 1.5, 2.5, 3.5])
+y_train = np.array([0.4, 0.5, 0.7, 1.0, 1.5, 1.7, 2.0])
+y_test = np.array([0.2, 0.6, 1.0, 1.3, 1.8])
+
+# TreeClassifier(X_train, X_test, y_train, y_test, criterion='gini', max_depth=3)
+# TreeRegressor(X_train, X_test, y_train, y_test, criterion='squared_error', max_depth=3)
 
 
 '''
@@ -114,3 +131,26 @@ num_iters = 5
 # print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 0.6, learning_rate, num_iters)[0], "\n")
 # print("Function values at each step: \n")
 # print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 0.6, learning_rate, num_iters)[1], "\n")
+
+
+'''
+perform kmeans clustering
+returns converged centers and cluster labels
+'''
+x1 = np.array([0, 0])
+x2 = np.array([0, 1])
+x3 = np.array([1, 1])
+x4 = np.array([1, 0])
+x5 = np.array([3, 0])
+x6 = np.array([3, 1])
+x7 = np.array([4, 0])
+x8 = np.array([4, 1])
+data_points = np.array([x1, x2, x3, x4, x5, x6, x7, x8])
+# c1_init = x1.copy()
+# c2_init = x2.copy()\
+c1_init = np.array([1, 2])
+c2_init = np.array([1, 2])
+centers_init = np.array([c1_init, c2_init])
+
+custom_kmeans(data_points, centers_init, n_clusters=2, max_iterations=100)
+# kmeans_sklearn(data_points, centers_init, num_clusters=2) # dont use
