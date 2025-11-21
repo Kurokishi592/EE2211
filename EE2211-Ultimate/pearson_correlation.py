@@ -46,7 +46,7 @@ def pearson_correlation(X, Y, return_sorted: bool = True, print_output: bool = T
         print(r)
         if return_sorted:
             idx_sorted = _np.argsort(-_np.abs(r))
-            print("Top features by |r| (index: r):")
+            print("Top features by |r| (WARNING index 0! remember + 1: r):")
             for i in idx_sorted:
                 print(f"  {i}: {r[i]:.4f}")
 

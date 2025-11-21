@@ -20,14 +20,15 @@ from EnterMetrics import EnterMetrics
 
 ''' 
 no need to add column of 1s to X for regression. X_fitted does it already. First row of w is w0.
-for correlation, row is sample, column is feature. Comparing each feature column to one target Y
+for correlation, row is sample, column is feature. (only use training set) Comparing each feature column to one target Y 
 '''
 X=np.array(
-    [[3.3459, 2.7435, -1.7253],
-     [1.0893,2.9113,-0.7804],
-     [3.2103,1.4706,-0.9944],
-     [1.744,1.2895,0.5307],
-     [1.6762,2.1366,-1.0502]
+    [[1,2,3],
+     [4,0,6],
+     [1,1,0],
+     [0,1,2],
+     [5,7,-2],
+     [-1,4,0]
    ]
 );
 
@@ -39,17 +40,18 @@ for binary, all functions are the same, key in -1 or 1 will do.
 for correlation, row is samples. should be comparing to one target only so only 1 column
 '''
 Y=np.array(
-    [[2.9972], 
-     [1.1399], 
-     [2.228], 
-     [0.3387], 
-     [2.5042]
+    [[0], 
+     [0], 
+     [1], 
+     [2], 
+     [1],
+     [2]
     ]
 );
 
 ''' same dont add one column of 1s to X_test for regression'''
 X_test=np.array(
-    [[6]
+    [[1,-2,3]
     ]
 )
 
@@ -61,7 +63,7 @@ X_test_fitted=np.hstack((np.ones((len(X_test),1)),X_test))
 # linear_regression(X_fitted,Y, X_test_fitted) 
 
 ''' used for multi-category classification task (auto one hot, key in 0, 1, 2 ... for y) '''
-# onehot_linearclassification(X_fitted,Y,X_test_fitted) 
+onehot_linearclassification(X_fitted,Y,X_test_fitted) 
 
 '''
 used for regression tasks, binary classification and multi-category classification tasks (manually one hot encode y for multi-category)
@@ -72,7 +74,7 @@ used for regression tasks, binary classification and multi-category classificati
     so read qn carefuly may need to reorder rows of w if they ask for it (and watch P's columns) accordingly
 '''
 # ridge_regression(X_fitted,Y,LAMBDA=0.1, X_test=X_test_fitted, form='auto') #linear model
-# polynomial_regression(X, Y, order=4, X_test=X_test)
+# polynomial_regression(X, Y, order=3, X_test=X_test)
 # ridge_poly_regression(X, Y, LAMBDA=1, order=2, form='auto', X_test=X_test)
 
 '''
@@ -97,13 +99,14 @@ regression_tree_house is just an example code, with custom tree regressor
     Provide enough thresholds to drive splits; missing entries stop growth for that node.
 both function returns nothing, just print out the training and test accuracies/MSEs
 '''
-X_train = np.array([0.2, 0.7, 1.8, 2.2, 3.7, 4.1, 4.5, 5.1, 6.3, 7.4])
-y_train = np.array([2.1, 1.5, 5.8, 6.1, 9.1, 9.5, 9.8, 12.7, 13.8, 15.9])
+X_train = np.array([0.1, 0.7, 1.6, 2.2, 3.6, 4.1, 4.4, 5.2, 6.2, 7.3])
+y_train = np.array([1.9, 1.5, 5.4, 6.1, 8.9, 9.5, 9.6, 12.9, 13.6, 15.7])
 X_test = np.array([1.0, 3.0, 6.0]) # leave untouched if not used
 y_test = np.array([0, 1, 2]) # leave untouched if not used
-max_depth = 20
+max_depth = 1
 impurity = 'gini' 
-decision_threshold = [3.0, [1.0, 4.8], [0.5, 1.5, 4.0, 5.4]]
+decision_threshold = [4.0]
+# decision_threshold = [3.0, [1.0, 4.8], [0.5, 1.5, 4.0, 5.4]]
 
 # manual_tree_regressor(X_train, y_train, max_depth=max_depth, decision_threshold=decision_threshold, X_test=X_test)
 # auto_tree_regressor(X_train, y_train, max_depth=max_depth, X_test=X_test)
@@ -122,27 +125,32 @@ GradientDescent(f, f_prime, initial, learning_rate, num_iters)
     [0]: steps at each iteration
     [1]: function values at each iteration
     [2]: gradient vectors at each iteration
-if multiple variables, put PARTIAL derivative of each variable in f_prime return tuple
+if multiple variables, put PARTIAL derivative of each variable in f_prime return tuple (now optional)
 (x,y,z) => (df/dx, df/dy, df/dz)
 '''
-learning_rate = 0.2
+learning_rate = 0.1
 num_iters = 3
 
-print("Values of parameters at each step (first row is initial values): \n")
-print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:(2*xy[0] + xy[1]**2, 2*xy[0]*xy[1]), (3,2) , learning_rate, num_iters)[0], "\n")
-print("Function values at each step: \n")
-print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:(2*xy[0] + xy[1]**2, 2*xy[0]*xy[1]), (3,2), learning_rate, num_iters)[1], "\n")
-print("Gradient vectors (partial derivatives) at each step: \n")
-print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, lambda xy:(2*xy[0] + xy[1]**2, 2*xy[0]*xy[1]), (3,2), learning_rate, num_iters)[2], "\n")
+# print("Values of parameters at each step (first row is initial values): \n")
+# print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, None, (3,2), learning_rate, num_iters)[0], "\n")
+# print("Function values at each step: \n")
+# print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, None, (3,2), learning_rate, num_iters)[1], "\n")
+# print("Gradient vectors (partial derivatives) at each step: \n")
+# print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, None, (3,2), learning_rate, num_iters)[2], "\n")
 
 # print("Values of parameters at each step (first row is initial values): \n")
-# print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 3, learning_rate, num_iters)[0], "\n")
+# print(GradientDescent(lambda b:np.cos(b**2)**2, None, 2, learning_rate, num_iters)[0], "\n")
 # print("Function values at each step: \n")
-# print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 3, learning_rate, num_iters)[1], "\n")
+# print(GradientDescent(lambda b:np.cos(b**2)**2, None, 2, learning_rate, num_iters)[1], "\n")
 # print("Gradient vectors (partial derivatives) at each step: \n")
-# print(GradientDescent(lambda b:np.sin(b)**2, lambda b:2*np.sin(b)*np.cos(b), 3, learning_rate, num_iters)[2], "\n")
+# print(GradientDescent(lambda b:np.cos(b**2)**2, None, 2, learning_rate, num_iters)[2], "\n")
 
-
+# print("Values of parameters at each step (first row is initial values): \n")
+# print(GradientDescent(lambda x:x**4, None, 2, learning_rate, num_iters)[0], "\n")
+# print("Function values at each step: \n")
+# print(GradientDescent(lambda x:x**4, None, 2, learning_rate, num_iters)[1], "\n")
+# print("Gradient vectors (partial derivatives) at each step: \n")
+# print(GradientDescent(lambda x:x**4, None, 2, learning_rate, num_iters)[2], "\n")
 '''
 perform kmeans clustering
 returns converged centers and cluster labels. Auto stop iterations upon convergence.
