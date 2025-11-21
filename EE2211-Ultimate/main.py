@@ -1,4 +1,3 @@
-from EnterMetrics import EnterMetrics
 from LinearRegression import linear_regression
 from PolynomialRegression import polynomial_regression
 from RidgePolynomialRegression import ridge_poly_regression
