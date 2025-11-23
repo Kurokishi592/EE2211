@@ -23,12 +23,12 @@ no need to add column of 1s to X for regression. X_fitted does it already. First
 for correlation, row is sample, column is feature. (only use training set) Comparing each feature column to one target Y 
 '''
 X=np.array(
-    [[1,2,3],
-     [4,0,6],
-     [1,1,0],
-     [0,1,2],
-     [5,7,-2],
-     [-1,4,0]
+    [[3,-9],
+     [-1,5],
+     [1,0.5],
+     [3,6],
+     [8,-2],
+     [-2,10]
    ]
 );
 
@@ -40,18 +40,18 @@ for binary, all functions are the same, key in -1 or 1 will do.
 for correlation, row is samples. should be comparing to one target only so only 1 column
 '''
 Y=np.array(
-    [[0], 
-     [0], 
+    [[1], 
+     [-1], 
      [1], 
-     [2], 
      [1],
-     [2]
+     [-1],
+     [-1]
     ]
 );
 
 ''' same dont add one column of 1s to X_test for regression'''
 X_test=np.array(
-    [[1,-2,3]
+    [[2,-6]
     ]
 )
 
@@ -63,7 +63,7 @@ X_test_fitted=np.hstack((np.ones((len(X_test),1)),X_test))
 # linear_regression(X_fitted,Y, X_test_fitted) 
 
 ''' used for multi-category classification task (auto one hot, key in 0, 1, 2 ... for y) '''
-onehot_linearclassification(X_fitted,Y,X_test_fitted) 
+# onehot_linearclassification(X_fitted,Y,X_test_fitted) 
 
 '''
 used for regression tasks, binary classification and multi-category classification tasks (manually one hot encode y for multi-category)
@@ -99,17 +99,19 @@ regression_tree_house is just an example code, with custom tree regressor
     Provide enough thresholds to drive splits; missing entries stop growth for that node.
 both function returns nothing, just print out the training and test accuracies/MSEs
 '''
-X_train = np.array([0.1, 0.7, 1.6, 2.2, 3.6, 4.1, 4.4, 5.2, 6.2, 7.3])
-y_train = np.array([1.9, 1.5, 5.4, 6.1, 8.9, 9.5, 9.6, 12.9, 13.6, 15.7])
+# X_train = np.array([[1,3.5],[-4.8,0],[3.2,1],[2,1.5],[8.7,6.3],[4.1,2.2],[7.3,10.3],[-2.8,-4.6],[0.9,-5.0],[-4.6,-9.8]])
+# y_train = np.array([0.2,-0.1,2.5,3.6,4.5,6.2,2.3,-0.5,2.9,4.3])
+X_train = np.array([0, 0.3, 2.5, 3.3, 4.4, 4.8, 5.3, 6.7, 7.0, 7.2])
+y_train = np.array([1,1,-1,-1,1,1,-1,-1,-1,-1])
 X_test = np.array([1.0, 3.0, 6.0]) # leave untouched if not used
 y_test = np.array([0, 1, 2]) # leave untouched if not used
 max_depth = 1
-impurity = 'gini' 
-decision_threshold = [4.0]
+impurity = 'entropy' 
+decision_threshold = [4.5]
 # decision_threshold = [3.0, [1.0, 4.8], [0.5, 1.5, 4.0, 5.4]]
 
 # manual_tree_regressor(X_train, y_train, max_depth=max_depth, decision_threshold=decision_threshold, X_test=X_test)
-# auto_tree_regressor(X_train, y_train, max_depth=max_depth, X_test=X_test)
+auto_tree_regressor(X_train, y_train, max_depth=max_depth, X_test=X_test)
 # manual_tree_classifier(X_train, y_train, max_depth=max_depth, decision_threshold=decision_threshold, X_test=X_test, criterion=impurity)
 # auto_tree_classifier(X_train, y_train, max_depth=max_depth, X_test=X_test, criterion=impurity)
 
@@ -128,7 +130,7 @@ GradientDescent(f, f_prime, initial, learning_rate, num_iters)
 if multiple variables, put PARTIAL derivative of each variable in f_prime return tuple (now optional)
 (x,y,z) => (df/dx, df/dy, df/dz)
 '''
-learning_rate = 0.1
+learning_rate = 0.01
 num_iters = 3
 
 # print("Values of parameters at each step (first row is initial values): \n")
@@ -139,37 +141,39 @@ num_iters = 3
 # print(GradientDescent(lambda xy:xy[0]**2 + xy[0]*xy[1]**2, None, (3,2), learning_rate, num_iters)[2], "\n")
 
 # print("Values of parameters at each step (first row is initial values): \n")
-# print(GradientDescent(lambda b:np.cos(b**2)**2, None, 2, learning_rate, num_iters)[0], "\n")
+# print(GradientDescent(lambda b:np.sin(np.exp(b))**2, None, 6, learning_rate, num_iters)[0], "\n")
 # print("Function values at each step: \n")
-# print(GradientDescent(lambda b:np.cos(b**2)**2, None, 2, learning_rate, num_iters)[1], "\n")
+# print(GradientDescent(lambda b:np.sin(np.exp(b))**2, None, 6, learning_rate, num_iters)[1], "\n")
 # print("Gradient vectors (partial derivatives) at each step: \n")
-# print(GradientDescent(lambda b:np.cos(b**2)**2, None, 2, learning_rate, num_iters)[2], "\n")
+# print(GradientDescent(lambda b:np.sin(np.exp(b))**2, None, 6, learning_rate, num_iters)[2], "\n")
 
 # print("Values of parameters at each step (first row is initial values): \n")
-# print(GradientDescent(lambda x:x**4, None, 2, learning_rate, num_iters)[0], "\n")
+# print(GradientDescent(lambda x:4*x**3, None, 2, learning_rate, num_iters)[0], "\n")
 # print("Function values at each step: \n")
-# print(GradientDescent(lambda x:x**4, None, 2, learning_rate, num_iters)[1], "\n")
+# print(GradientDescent(lambda x:4*x**3, None, 2, learning_rate, num_iters)[1], "\n")
 # print("Gradient vectors (partial derivatives) at each step: \n")
-# print(GradientDescent(lambda x:x**4, None, 2, learning_rate, num_iters)[2], "\n")
+# print(GradientDescent(lambda x:4*x**3, None, 2, learning_rate, num_iters)[2], "\n")
 '''
 perform kmeans clustering
 returns converged centers and cluster labels. Auto stop iterations upon convergence.
 for fuzzy means, run fuzzy_cmeans.py directly instead
 '''
-x1 = np.array([50])
-x2 = np.array([60])
-x3 = np.array([66])
-x4 = np.array([68])
-x5 = np.array([71])
-x6 = np.array([72])
-x7 = np.array([75])
-x8 = np.array([82])
-x9 = np.array([90])
-x10 = np.array([99])
-data_points = np.array([x1, x2, x3, x4, x5, x6, x7, x8, x9, x10])
-c1_init = x3.copy()
-c2_init = x7.copy()
-# c3_init = x7.copy()
-centers_init = np.array([c1_init, c2_init])
+x1 = np.array([5])
+x2 = np.array([6])
+x3 = np.array([9])
+x4 = np.array([11])
+x5 = np.array([13])
+x6 = np.array([14])
+x7 = np.array([15])
+x8 = np.array([18])
+x9 = np.array([18])
+x10 = np.array([22])
+x11 = np.array([23])
+x12 = np.array([26])
+data_points = np.array([x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12])
+c1_init = np.array([6])
+c2_init = np.array([13.0])
+c3_init = np.array([22.0])
+centers_init = np.array([c1_init, c2_init, c3_init])
 
-# custom_kmeans(data_points, centers_init, n_clusters=2, max_iterations=100)
+# custom_kmeans(data_points, centers_init, n_clusters=3, max_iterations=100)
